@@ -1,0 +1,20 @@
+img {
+  max-width: 100%;
+  border-radius: $border-radius-small;
+}
+
+.img-raised {
+  box-shadow: $box-shadow-raised;
+}
+
+.image-preview {
+  width: 200px;
+  height: 150px;
+  border-radius: 10px;
+  margin: auto;
+
+  &.small {
+    width: 80px;
+    height: 50px;
+  }
+}

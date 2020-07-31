@@ -1,0 +1,31 @@
+$borderGray: #DDDDDD;
+$borderRed: #dc3545;
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#adult, #child {
+    width: 50px;
+    text-align: center;
+    border-right: 1px solid $borderGray;
+    height: 30px !important;
+}
+
+#adult.is-invalid, #child.is-invalid {
+    border-right: 1px solid $borderRed;
+}
+
+.adults, .children {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-bottom: 10px;
+}
+
+.decrement, .increment {
+    margin-left: 10px;
+    border: solid 1px !important;
+}
