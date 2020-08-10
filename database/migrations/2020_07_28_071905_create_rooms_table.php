@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFreeRoomsTable extends Migration
+class CreateRoomsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreateFreeRoomsTable extends Migration
      */
     public function up()
     {
-        Schema::create('free_rooms', function (Blueprint $table) {
+        Schema::create('rooms', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('room_id')
-                ->constrained('rooms')
+            $table->foreignId('hotel_id')
+                ->constrained('hotels')
                 ->cascadeOnDelete();
-            $table->integer('free');
-            $table->date('date');
+            $table->string('name');
+            $table->integer('adults');
+            $table->integer('children');
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ class CreateFreeRoomsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('free_rooms');
+        Schema::dropIfExists('rooms');
     }
 }

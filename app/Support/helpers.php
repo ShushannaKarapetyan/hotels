@@ -61,10 +61,17 @@ function escape_like(string $value, string $char = '\\'): string
     );
 }
 
-///**
-// * @return array
-// */
-//function js_translations()
-//{
-//    return require_once base_path('resources/lang/js_translations.php');
-//}
+/**
+ * @param $week
+ * @return array
+ */
+function weekNumbers($week)
+{
+    $weekNumbers = [];
+
+    for ($index = 0; $index < count($week); $index++) {
+        $weekNumbers[$index] = Carbon::now()->addWeeks($index)->weekOfYear;
+    }
+
+    return $weekNumbers;
+}

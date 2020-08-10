@@ -19,7 +19,8 @@
     </script>
 </head>
 <body>
-    <div id="app" class="wrapper">
+<div id="app" class="wrapper">
+    @if(auth()->user())
         @include('layouts.sidbebar')
         <div class="main-panel">
             @include('layouts.navbar')
@@ -27,11 +28,20 @@
                 @yield('content')
             </div>
         </div>
-        @include('partials._swal-flash')
-    </div>
+    @else
+        <div class="main-panel" style="width: 100%">
+            @include('layouts.navbar')
+            <div class="content">
+                @yield('content')
+            </div>
+        </div>
+    @endif
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
-    @stack('scripts')
+    @include('partials._swal-flash')
+</div>
+
+<!-- Scripts -->
+<script src="{{ asset('js/app.js') }}"></script>
+@stack('scripts')
 </body>
 </html>

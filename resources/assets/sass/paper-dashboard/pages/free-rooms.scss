@@ -1,13 +1,26 @@
 $borderGray: #DDDDDD;
 $borderRed: #dc3545;
 
+table {
+    border-top: 1px solid #DDDDDD;
+
+    td {
+        border: none !important;
+    }
+}
+
+.room-name {
+    font-size: 17px;
+    font-weight: bold;
+}
+
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 
-#adult, #child {
+#free-room {
     width: 50px;
     text-align: center;
     border-right: 1px solid $borderGray;
@@ -18,15 +31,8 @@ input[type=number]::-webkit-outer-spin-button {
     }
 }
 
-#adult.is-invalid, #child.is-invalid {
+#free-room.is-invalid {
     border-right: 1px solid $borderRed;
-}
-
-.adults, .children {
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    margin-bottom: 10px;
 }
 
 .decrement, .increment {
@@ -34,3 +40,19 @@ input[type=number]::-webkit-outer-spin-button {
     border: solid 1px !important;
 }
 
+.form-control.is-invalid {
+    padding: 10px 15px;
+}
+
+.save-data {
+
+    button {
+        position: absolute;
+        top: 96%;
+        left: 20px;
+    }
+}
+
+.form-free-rooms .card{
+    margin-bottom: 50px;
+}

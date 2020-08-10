@@ -9,7 +9,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            <form method="POST" action="{{ route('free_rooms.update', $hotel) }}" class="form-free-rooms">
+            <form method="POST" action="{{ route('public_free_rooms.update', $uuid) }}">
                 @csrf
                 @method('PUT')
                 @forelse($rooms as $index => $room)

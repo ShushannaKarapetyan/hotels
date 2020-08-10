@@ -65,19 +65,6 @@
                     <p>Hotels</p>
                 </a>
             </li>
-            {{--<li class="{{ active_route('hotel_rooms') }}">
-                <a href="{{ route('hotel_rooms') }}">
-                    <i class="fa fa-bed"></i>
-                    <p>Hotel Rooms</p>
-                </a>
-            </li>--}}
-
-{{--            <li class="{{ active_route('horizon.index') }}">--}}
-{{--                <a href="{{ route('horizon.index') }}">--}}
-{{--                    <i class="fas fa-chart-pie"></i>--}}
-{{--                    <p>Horizon</p>--}}
-{{--                </a>--}}
-{{--            </li>--}}
         </ul>
     </div>
 </div>

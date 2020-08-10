@@ -25,6 +25,7 @@
                                 <th>Name</th>
                                 <th>Type</th>
                                 <th>Rooms</th>
+                                <th>Free Rooms Updated At</th>
                                 <th>Created On</th>
                                 <th>Actions</th>
                             </tr>
@@ -41,6 +42,9 @@
                                            href="{{ route('hotel.rooms', $hotel) }}">
                                             Rooms
                                         </a>
+                                    </td>
+                                    <td>
+                                        {{ $hotel->rooms_updated_at }}
                                     </td>
                                     <td>{{ $hotel->created_at->toDateString() }}</td>
                                     <td class="d-flex">

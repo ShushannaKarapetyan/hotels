@@ -18,10 +18,12 @@ class CreateHotelsTable extends Migration
             $table->foreignId('type_id')
                 ->constrained('hotel_types')
                 ->cascadeOnDelete();
+            $table->uuid('uuid');
             $table->string('name')->unique();
             $table->string('email')->unique();
             $table->string('phone')->unique();
             $table->string('address')->unique();
+            $table->date('rooms_updated_at');
             $table->timestamps();
         });
     }

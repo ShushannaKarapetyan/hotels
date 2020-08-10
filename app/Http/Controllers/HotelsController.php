@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\FreeRoom;
 use App\Hotel;
-use App\HotelRoom;
+use App\Room;
 use App\HotelType;
 use App\Http\Requests\HotelRequest;
 use Exception;
@@ -122,19 +123,19 @@ class HotelsController extends Controller
      */
     public function rooms(Hotel $hotel)
     {
-        $rooms = HotelRoom::where('hotel_id', $hotel->id)->paginate(20);
+        $rooms = Room::where('hotel_id', $hotel->id)->paginate(20);
 
         if (request()->search_query) {
             $searchQuery = escape_like(request()->search_query);
-            $rooms = HotelRoom::query()->where('name', 'like', '%' . $searchQuery . '%')
+            $rooms = Room::query()->where('name', 'like', '%' . $searchQuery . '%')
                 ->where('hotel_id', $hotel->id)
                 ->orderByDesc('created_at')
                 ->paginate(10);
         }
 
-        return view('hotels.rooms', [
-            'rooms' => $rooms,
-            'hotel' => $hotel,
-        ]);
+        return view('hotels.rooms', compact([
+            'rooms',
+            'hotel',
+        ]));
     }
 }

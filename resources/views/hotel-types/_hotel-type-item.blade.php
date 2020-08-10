@@ -1,7 +1,9 @@
 <div class="hotel-type-item col-md-6">
     <div class="form-group">
         <div class="input-group">
-            <input type="text" name="hotel_types[{{ $hotelTypeId ?? '{HOTEL_TYPE_ID}' }}]" required
+            <input type="text"
+                   name="hotel_types[{{ $hotelTypeId ?? '{HOTEL_TYPE_ID}' }}]"
+                   required
                    class="lang-input form-control {{ $errors->has("hotel_types.{$hotelTypeId}") ? ' is-invalid' : '' }}"
                    value="{{ @$hotelTypeName }}"
                    placeholder="Enter Hotel Type Name">

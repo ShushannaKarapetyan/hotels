@@ -4,22 +4,22 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Notifications\Notifiable;
 
-class FreeRoom extends Model
+class Manager extends Model
 {
-    protected $fillable = [
-        'room_id',
-        'free',
-        'date',
-    ];
+    use Notifiable;
 
-    //protected $with = ['room'];
+    protected $fillable = [
+        'hotel_id',
+        'email',
+    ];
 
     /**
      * @return BelongsTo
      */
-    public function room()
+    public function hotel()
     {
-        return $this->belongsTo(Room::class);
+        return $this->belongsTo(Hotel::class);
     }
 }

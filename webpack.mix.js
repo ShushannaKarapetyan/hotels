@@ -16,7 +16,9 @@ mix.sourceMaps(false, 'source-map').version()
 
     .sass('resources/assets/sass/app.scss', 'public/css')
     .sass('resources/assets/sass/paper-dashboard/pages/_room-fields.scss', 'public/css')
+    .sass('resources/assets/sass/paper-dashboard/pages/free-rooms.scss', 'public/css')
 
     .js('resources/assets/js/app.js', 'public/js')
     .js('resources/assets/js/modules/hotel-types.js', 'public/js/modules')
-    .js('resources/assets/js/modules/hotel-rooms.js', 'public/js/modules');
+    .js('resources/assets/js/modules/hotel-rooms.js', 'public/js/modules')
+    .js('resources/assets/js/modules/free-rooms.js', 'public/js/modules');

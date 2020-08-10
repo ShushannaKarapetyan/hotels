@@ -31,9 +31,7 @@ $(document).ready(function () {
 
     function addRoomFields() {
         let $hotelRoomItem = $('#hotel-room-item-wrapper').html();
-/*
-        $hotelRoomItem = $hotelRoomItem.replace('{HOTEL_ROOM_ID}', 'temp_' + Math.random().toString(36).substring(2));
-*/
+
         $hotelRoomItem = $hotelRoomItem.replace(/HOTEL_ROOM_ID/g, 'temp_' + Math.random().toString(36).substring(2));
 
         $('#hotel-room-list').append($hotelRoomItem);

@@ -5,9 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class HotelRoom extends Model
+class Room extends Model
 {
     protected $fillable = [
         'hotel_id',
@@ -16,7 +15,7 @@ class HotelRoom extends Model
         'children',
     ];
 
-   protected $with = ['freeRoom'];
+    //protected $with = ['freeRoom'];
 
     /**
      * @return BelongsTo

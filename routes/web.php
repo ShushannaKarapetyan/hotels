@@ -2,17 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Route::get('/login', 'LoginController@showLoginForm');
 Route::post('/login', 'LoginController@login')->name('login');
 
@@ -39,11 +28,17 @@ Route::group(['middleware' => 'auth'], function () {
 
     //-----Rooms-----------------------------------------------------------------------------------------------------//
     Route::get('/hotels/{hotel}/rooms', 'HotelsController@rooms')->name('hotel.rooms');
-    Route::get('/hotels/{hotel}/rooms/create', 'HotelRoomsController@create')->name('hotel_rooms.create');
-    Route::post('/hotels/{hotel}/rooms', 'HotelRoomsController@store')->name('hotel_rooms.store');
-    Route::get('/hotels/{hotel}/rooms/{room}/edit', 'HotelRoomsController@edit')->name('hotel_rooms.edit');
-    Route::put('/hotels/{hotel}/rooms/{room}', 'HotelRoomsController@update')->name('hotel_rooms.update');
-    Route::delete('/hotels/{hotel}/rooms/{room}', 'HotelRoomsController@destroy')->name('hotel_rooms.delete');
+    Route::get('/hotels/{hotel}/rooms/create', 'RoomsController@create')->name('hotel_rooms.create');
+    Route::post('/hotels/{hotel}/rooms', 'RoomsController@store')->name('hotel_rooms.store');
+    Route::get('/hotels/{hotel}/rooms/{room}/edit', 'RoomsController@edit')->name('hotel_rooms.edit');
+    Route::put('/hotels/{hotel}/rooms/{room}', 'RoomsController@update')->name('hotel_rooms.update');
+    Route::delete('/hotels/{hotel}/rooms/{room}', 'RoomsController@destroy')->name('hotel_rooms.delete');
 
     Route::get('/hotels/{hotel}/free-rooms', 'FreeRoomsController@index')->name('free_rooms');
+    Route::put('/hotels/{hotel}/free-rooms', 'FreeRoomsController@update')->name('free_rooms.update');
 });
+
+//-----Public-----------------------------------------------------------------------------------------------------//
+Route::get('/hotels/{uuid}/public-free-rooms', 'PublicFreeRoomsController@index')->name('public_free_rooms');
+Route::put('/hotels/{uuid}/public-free-rooms', 'PublicFreeRoomsController@update')->name('public_free_rooms.update');
+
