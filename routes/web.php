@@ -39,6 +39,6 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 //-----Public-----------------------------------------------------------------------------------------------------//
-Route::get('/hotels/{uuid}/public-free-rooms', 'PublicFreeRoomsController@index')->name('public_free_rooms');
-Route::put('/hotels/{uuid}/public-free-rooms', 'PublicFreeRoomsController@update')->name('public_free_rooms.update');
+Route::get('/hotels/{uuid}/public-free-rooms', 'FreeRoomsController@publicFreeRooms')->name('public_free_rooms');
+Route::put('/hotels/{uuid}/public-free-rooms', 'FreeRoomsController@publicFreeRoomsUpdate')->name('public_free_rooms.update');
 

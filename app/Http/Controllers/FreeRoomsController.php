@@ -22,6 +22,81 @@ class FreeRoomsController extends Controller
     {
         $rooms = Room::where('hotel_id', $hotel->id)->get();
 
+        [$allDays,
+            $weekNumbers,
+            $freeRoomsByWeeks
+        ] = $this->getFreeRoomsData($rooms);
+
+        return view('hotel-rooms.free-rooms', compact([
+            'hotel',
+            'rooms',
+            'allDays',
+            'weekNumbers',
+            'freeRoomsByWeeks',
+        ]));
+    }
+
+    /**
+     * @param Hotel $hotel
+     * @param FreeRoomsRequest $request
+     * @return RedirectResponse
+     */
+    public function update(Hotel $hotel, FreeRoomsRequest $request)
+    {
+        $this->freeRoomsUpdate($hotel, $request);
+
+        return redirect()->route('free_rooms', $hotel);
+    }
+
+    /**
+     * @param $uuid
+     * @return Factory|View
+     */
+    public function publicFreeRooms($uuid)
+    {
+        $hotel = Hotel::where('uuid', $uuid)->first();
+
+        if (!$hotel) {
+            abort(404);
+        }
+
+        $rooms = Room::where('hotel_id', $hotel->id)->get();
+
+        [$allDays,
+            $weekNumbers,
+            $freeRoomsByWeeks
+        ] = $this->getFreeRoomsData($rooms);
+
+        return view('hotel-rooms._free-rooms', compact([
+            'hotel',
+            'uuid',
+            'rooms',
+            'allDays',
+            'weekNumbers',
+            'freeRoomsByWeeks',
+        ]));
+    }
+
+    /**
+     * @param $uuid
+     * @param FreeRoomsRequest $request
+     * @return RedirectResponse
+     */
+    public function publicFreeRoomsUpdate($uuid, FreeRoomsRequest $request)
+    {
+        $hotel = Hotel::where('uuid', $uuid)->first();
+
+        $this->freeRoomsUpdate($hotel, $request);
+
+        return redirect()->route('public_free_rooms', $uuid);
+    }
+
+    /**
+     * @param $rooms
+     * @return array
+     */
+    public function getFreeRoomsData($rooms)
+    {
         $freeRoomsByWeeks = [];
 
         $firstDay = Carbon::now()->startOfDay();
@@ -47,21 +122,18 @@ class FreeRoomsController extends Controller
             }
         }
 
-        return view('hotel-rooms.free-rooms', compact([
-            'hotel',
-            'rooms',
-            'allDays',
-            'weekNumbers',
-            'freeRoomsByWeeks',
-        ]));
+        return [
+            $allDays,
+            $weekNumbers,
+            $freeRoomsByWeeks
+        ];
     }
 
     /**
-     * @param Hotel $hotel
-     * @param FreeRoomsRequest $request
-     * @return RedirectResponse
+     * @param $hotel
+     * @param $request
      */
-    public function update(Hotel $hotel, FreeRoomsRequest $request)
+    public function freeRoomsUpdate($hotel, $request)
     {
         $roomIds = Room::where('hotel_id', $hotel->id)->pluck('id');
 
@@ -92,7 +164,5 @@ class FreeRoomsController extends Controller
         ]);
 
         flash('FreeRooms have been successfully updated.', 'success');
-
-        return redirect()->route('free_rooms', $hotel);
     }
 }
