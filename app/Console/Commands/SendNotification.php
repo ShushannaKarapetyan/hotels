@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Hotel;
-use App\Manager;
 use App\Notifications\ManagerNotification;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class SendNotification extends Command
@@ -42,16 +42,12 @@ class SendNotification extends Command
     {
         $this->line("Sends notification...");
 
-        $roomsUpdatedAt = Hotel::pluck('rooms_updated_at', 'id');
+        $hotels = Hotel::with('manager')
+            ->where('rooms_updated_at', '<', Carbon::now()->subWeeks(2))
+            ->get();
 
-        foreach ($roomsUpdatedAt as $hotelId => $updatedAt) {
-            if (strtotime($updatedAt) < strtotime('-2 weeks')) {
-                $managers[] = Manager::where('hotel_id', $hotelId)->first();
-            }
-        }
-
-        foreach ($managers as $manager) {
-            $manager->notify(new ManagerNotification($manager->hotel->uuid));
+        foreach ($hotels as $hotel) {
+            $hotel->manager->notify(new ManagerNotification($hotel->uuid));
         }
     }
 }

@@ -9,7 +9,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            <form method="POST" action="{{ route('public_free_rooms.update', $uuid) }}">
+            <form method="POST" action="{{ route('public_free_rooms.update', $uuid) }}" class="form-free-rooms">
                 @csrf
                 @method('PUT')
                 @forelse($rooms as $index => $room)
@@ -41,7 +41,7 @@
                                                        name="free_rooms[{{ $room->id }}][{{ $day }}]"
                                                        required
                                                        min="0"
-                                                       value="{{ count($freeRoomsByWeeks[0]) ? $freeRoomsByWeeks[$index][$weekNumbers[0]][$i]->free : 0}}">
+                                                       value="{{ count($freeRoomsByWeeks) ? $freeRoomsByWeeks[$room->id][$weekNumbers[0]][$i]['free'] : 0}}">
                                             </td>
                                             <td>
                                                 <button type="button" class="btn-secondary btn-sm decrement">
@@ -79,7 +79,7 @@
                                                        class="form-control free-rooms {{ $errors->has("free_rooms.$room->id.$day") ? 'is-invalid' : '' }}"
                                                        name="free_rooms[{{ $room->id }}][{{ $day }}]"
                                                        min="0"
-                                                       value="{{ count($freeRoomsByWeeks[0]) ? $freeRoomsByWeeks[$index][$weekNumbers[1]][$i]->free : 0}}">
+                                                       value="{{ count($freeRoomsByWeeks) ? $freeRoomsByWeeks[$room->id][$weekNumbers[1]][$i]['free'] : 0}}">
                                             </td>
                                             <td>
                                                 <button type="button" class="btn-secondary btn-sm decrement">
@@ -117,7 +117,7 @@
                                                        class="form-control free-rooms {{ $errors->has("free_rooms.$room->id.$day") ? 'is-invalid' : '' }}"
                                                        name="free_rooms[{{ $room->id }}][{{ $day }}]"
                                                        min="0"
-                                                       value="{{ count($freeRoomsByWeeks[0]) ? $freeRoomsByWeeks[$index][$weekNumbers[2]][$i]->free : 0}}">
+                                                       value="{{ (count($freeRoomsByWeeks) && count($freeRoomsByWeeks[$room->id]) === 3) ? $freeRoomsByWeeks[$room->id][$weekNumbers[2]][$i]['free'] : 0}}">
                                             </td>
                                             <td>
                                                 <button type="button" class="btn-secondary btn-sm decrement">
@@ -148,7 +148,7 @@
                 @empty
                     <p class="text-center">No Free Rooms</p>
                 @endforelse
-                @if(count($freeRoomsByWeeks))
+                @if(count($rooms))
                     <div class="save-data">
                         <button type="submit" class="btn btn-primary btn-round">
                             Save

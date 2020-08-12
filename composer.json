@@ -13,7 +13,6 @@
         "ext-http": "*",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",
-        "goldspecdigital/laravel-eloquent-uuid": "^7.0",
         "guzzlehttp/guzzle": "^6.3",
         "laracasts/flash": "^3.1",
         "laravel/framework": "^7.0",

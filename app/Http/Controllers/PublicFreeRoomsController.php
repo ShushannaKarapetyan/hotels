@@ -28,34 +28,28 @@ class PublicFreeRoomsController extends Controller
 
         $rooms = Room::where('hotel_id', $hotel->id)->get();
 
+        $freeRoomsByWeeks = [];
+
         $firstDay = Carbon::now()->startOfDay();
         $lastDay = Carbon::now()->addWeeks(2)->endOfWeek();
         $allDays = DateGetter::getDates($firstDay, $lastDay);
         $weekNumbers = weekNumbers($allDays);
 
-        $freeRooms = [];
-
-        foreach ($rooms as $room) {
-            $freeRooms[] = FreeRoom::where('room_id', $room->id)->get();
-        }
-
-        $freeRoomsByWeeks = [];
-
-        foreach ($freeRooms as $freeRoom) {
-            $freeRoomsByWeeks[] = $freeRoom->groupBy(function ($date) {
-                return Carbon::parse($date->date)->format('W');
-            });
-        }
-
-        if (count($freeRoomsByWeeks[0]) && array_keys(end($freeRoomsByWeeks[0]))[count($freeRoomsByWeeks[0]) - 1] !== $weekNumbers[2]) {
+        if (count($rooms)) {
             foreach ($rooms as $room) {
-                foreach ($allDays[2] as $day) {
-                    FreeRoom::create([
-                        'room_id' => $room->id,
-                        'free' => 0,
-                        'date' => $day,
-                    ]);
-                }
+                $roomIds[] = $room->id;
+            }
+
+            $freeRooms[] = FreeRoom::whereIn('room_id', $roomIds)
+                ->where('date', '>=', Carbon::now()->format('Y-m-d'))
+                ->get();
+
+            $freeRoomsByRooms = $freeRooms[0]->groupBy('room_id');
+
+            foreach ($freeRoomsByRooms as $roomId => $freeRoomsByRoom) {
+                $freeRoomsByWeeks[$roomId] = $freeRoomsByRooms[$roomId]->groupBy(function ($date) {
+                    return Carbon::parse($date->date)->format('W');
+                });
             }
         }
 
@@ -78,40 +72,32 @@ class PublicFreeRoomsController extends Controller
     {
         $hotel = Hotel::where('uuid', $uuid)->first();
 
-        $rooms = Room::where('hotel_id', $hotel->id)->pluck('id');
-
-        $freeRooms = [];
-
         $roomIds = Room::where('hotel_id', $hotel->id)->pluck('id');
 
+        $now = Carbon::now();
+
         foreach ($roomIds as $roomId) {
-            $freeRooms[] = FreeRoom::where('room_id', $roomId)->get();
-        }
+            foreach ($request->free_rooms[$roomId] as $date => $free) {
+                $dates[] = $date;
 
-        if (count($freeRooms[0]) === 0) {
-            foreach ($roomIds as $roomId) {
-                foreach (array_values($request->free_rooms[$roomId]) as $i => $freeRoom) {
-                    FreeRoom::create([
-                        'room_id' => $roomId,
-                        'free' => $freeRoom,
-                        'date' => array_keys($request->free_rooms[$roomId])[$i],
-                    ]);
-                }
+                $freeRoomData[] = [
+                    'room_id' => $roomId,
+                    'free' => $free,
+                    'date' => $date,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
             }
         }
 
-        foreach ($rooms as $room) {
-            foreach (array_values($request->free_rooms[$room]) as $i => $freeRoom) {
-                FreeRoom::where('room_id', $room)
-                    ->where('date', array_keys($request->free_rooms[$room])[$i])
-                    ->update([
-                        'free' => $freeRoom,
-                    ]);
-            }
-        }
+        FreeRoom::whereIn('room_id', $roomIds)
+            ->whereIn('date', $dates)
+            ->delete();
+
+        FreeRoom::insert($freeRoomData);
 
         $hotel->update([
-            'rooms_updated_at' => Carbon::now()->format('Y-m-d'),
+            'rooms_updated_at' => $now->format('Y-m-d'),
         ]);
 
         flash('FreeRooms have been successfully updated.', 'success');
