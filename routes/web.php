@@ -23,7 +23,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::delete('/hotels/{hotel}', 'HotelsController@destroy')->name('hotels.delete');
 
     //-----Topics-----------------------------------------------------------------------------------------------------//
-    Route::get('/hotel-types', 'HotelTypesController@index')->name('hotel_types');
+    //Route::get('/hotel-types', 'HotelTypesController@index')->name('hotel_types');
     Route::put('/hotel-types', 'HotelTypesController@sync')->name('hotel_types.sync');
 
     //-----Rooms-----------------------------------------------------------------------------------------------------//
@@ -34,11 +34,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('/hotels/{hotel}/rooms/{room}', 'RoomsController@update')->name('hotel_rooms.update');
     Route::delete('/hotels/{hotel}/rooms/{room}', 'RoomsController@destroy')->name('hotel_rooms.delete');
 
-    Route::get('/hotels/{hotel}/free-rooms', 'FreeRoomsController@index')->name('free_rooms');
+    //Route::get('/hotels/{hotel}/free-rooms', 'FreeRoomsController@index')->name('free_rooms');
     Route::put('/hotels/{hotel}/free-rooms', 'FreeRoomsController@update')->name('free_rooms.update');
 });
 
 //-----Public-----------------------------------------------------------------------------------------------------//
 Route::get('/hotels/{uuid}/public-free-rooms', 'FreeRoomsController@publicFreeRooms')->name('public_free_rooms');
 Route::put('/hotels/{uuid}/public-free-rooms', 'FreeRoomsController@publicFreeRoomsUpdate')->name('public_free_rooms.update');
+
+Route::get('/hotels/{hotel}/free-rooms', 'FreeRoomsController@index')->name('free_rooms');
+Route::get('/hotel-types', 'HotelTypesController@index')->name('hotel_types');
+Route::get('/filtered-hotels', 'HotelsController@getFilteredHotels');
 

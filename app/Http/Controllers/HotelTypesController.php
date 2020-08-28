@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\HotelTypesSyncRequest;
 use App\HotelType;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,7 +14,7 @@ class HotelTypesController extends Controller
 {
     /**
      * @param Request $request
-     * @return Factory|View
+     * @return Factory|JsonResponse|View
      */
     public function index(Request $request)
     {
@@ -25,6 +26,12 @@ class HotelTypesController extends Controller
         }
 
         $hotelTypes = $hotelTypes->pluck('type', 'id');
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'data' => $hotelTypes,
+            ]);
+        }
 
         return view('hotel-types.index', [
             'hotelTypes' => $hotelTypes,

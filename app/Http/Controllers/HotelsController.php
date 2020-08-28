@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\FreeRoom;
 use App\Hotel;
+use App\Http\Requests\HotelFiltersRequest;
 use App\Room;
 use App\HotelType;
 use App\Http\Requests\HotelRequest;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Database\Eloquent\Builder;
 
 class HotelsController extends Controller
 {
@@ -127,7 +130,8 @@ class HotelsController extends Controller
 
         if (request()->search_query) {
             $searchQuery = escape_like(request()->search_query);
-            $rooms = Room::query()->where('name', 'like', '%' . $searchQuery . '%')
+
+            $rooms = Room::where('name', 'like', '%' . $searchQuery . '%')
                 ->where('hotel_id', $hotel->id)
                 ->orderByDesc('created_at')
                 ->paginate(10);
@@ -137,5 +141,30 @@ class HotelsController extends Controller
             'rooms',
             'hotel',
         ]));
+    }
+
+    /**
+     * @param HotelFiltersRequest $request
+     * @return JsonResponse
+     */
+    public function getFilteredHotels(HotelFiltersRequest $request)
+    {
+        if ($request->wantsJson()) {
+            $hotels = Hotel::whereHas('rooms', function (Builder $query) use ($request) {
+                $query->where('adults', $request->adults)
+                    ->where('children', $request->children)
+                    ->whereHas('freeRoom', function (Builder $query) use ($request) {
+                        $query->where('free', '>', 0)
+                            ->where('date', '>=', Carbon::parse($request->from))
+                            ->where('date', '<=', Carbon::parse($request->to));
+                    });
+            })->where('type_id', $request->type)
+                ->with('rooms')
+                ->get();
+
+            return response()->json([
+                'hotels' => $hotels,
+            ]);
+        }
     }
 }

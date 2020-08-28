@@ -15,8 +15,6 @@ class Room extends Model
         'children',
     ];
 
-    //protected $with = ['freeRoom'];
-
     /**
      * @return BelongsTo
      */

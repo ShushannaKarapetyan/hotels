@@ -13,8 +13,6 @@ class FreeRoom extends Model
         'date',
     ];
 
-    //protected $with = ['room'];
-
     /**
      * @return BelongsTo
      */

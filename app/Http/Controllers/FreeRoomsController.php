@@ -9,6 +9,7 @@ use App\Http\Requests\FreeRoomsRequest;
 use App\Support\DateGetter;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -16,7 +17,7 @@ class FreeRoomsController extends Controller
 {
     /**
      * @param Hotel $hotel
-     * @return Factory|View
+     * @return Factory|JsonResponse|View
      */
     public function index(Hotel $hotel)
     {
@@ -26,6 +27,16 @@ class FreeRoomsController extends Controller
             $weekNumbers,
             $freeRoomsByWeeks
         ] = $this->getFreeRoomsData($rooms);
+
+        if (request()->wantsJson()) {
+            foreach (call_user_func_array('array_merge', $allDays) as $day) {
+                $formattedDates[] = Carbon::parse($day)->format('d M, D');
+            }
+
+            return response()->json([
+                'data' => $formattedDates,
+            ]);
+        }
 
         return view('hotel-rooms.free-rooms', compact([
             'hotel',
