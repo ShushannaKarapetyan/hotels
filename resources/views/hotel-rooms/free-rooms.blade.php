@@ -41,7 +41,7 @@
                                                        name="free_rooms[{{ $room->id }}][{{ $day }}]"
                                                        required
                                                        min="0"
-                                                       value="{{ (count($freeRoomsByWeeks) && count($freeRoomsByWeeks[$room->id]) === 3) ? $freeRoomsByWeeks[$room->id][$weekNumbers[0]][$i]['free'] : 0}}">
+                                                       value="{{ (@$freeRoomsByWeeks[$room->id] && count($freeRoomsByWeeks[$room->id]) === 3) ? $freeRoomsByWeeks[$room->id][$weekNumbers[0]][$i]['free'] : 0}}">
                                             </td>
                                             <td>
                                                 <button type="button" class="btn-secondary btn-sm decrement">
@@ -79,7 +79,7 @@
                                                        class="form-control free-rooms {{ $errors->has("free_rooms.$room->id.$day") ? 'is-invalid' : '' }}"
                                                        name="free_rooms[{{ $room->id }}][{{ $day }}]"
                                                        min="0"
-                                                       value="{{(count($freeRoomsByWeeks) && count($freeRoomsByWeeks[$room->id]) === 3) ? $freeRoomsByWeeks[$room->id][$weekNumbers[1]][$i]['free'] : 0}}">
+                                                       value="{{ (@$freeRoomsByWeeks[$room->id] && count($freeRoomsByWeeks[$room->id]) === 3) ? $freeRoomsByWeeks[$room->id][$weekNumbers[1]][$i]['free'] : 0}}">
                                             </td>
                                             <td>
                                                 <button type="button" class="btn-secondary btn-sm decrement">
@@ -117,7 +117,7 @@
                                                        class="form-control free-rooms {{ $errors->has("free_rooms.$room->id.$day") ? 'is-invalid' : '' }}"
                                                        name="free_rooms[{{ $room->id }}][{{ $day }}]"
                                                        min="0"
-                                                       value="{{ (count($freeRoomsByWeeks) && count($freeRoomsByWeeks[$room->id]) === 3) ? $freeRoomsByWeeks[$room->id][$weekNumbers[2]][$i]['free'] : 0}}">
+                                                       value="{{ (@$freeRoomsByWeeks[$room->id] && count($freeRoomsByWeeks[$room->id]) === 3) ? $freeRoomsByWeeks[$room->id][$weekNumbers[2]][$i]['free'] : 0}}">
                                             </td>
                                             <td>
                                                 <button type="button" class="btn-secondary btn-sm decrement">
