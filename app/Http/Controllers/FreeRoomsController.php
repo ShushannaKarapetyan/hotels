@@ -28,17 +28,7 @@ class FreeRoomsController extends Controller
             $freeRoomsByWeeks
         ] = $this->getFreeRoomsData($rooms);
 
-        if (request()->wantsJson()) {
-            foreach (call_user_func_array('array_merge', $allDays) as $day) {
-                $formattedDates[] = Carbon::parse($day)->format('d M, D');
-            }
-
-            return response()->json([
-                'data' => $formattedDates,
-            ]);
-        }
-
-        return view('hotel-rooms.free-rooms', compact([
+        return view('rooms.free-rooms.index', compact([
             'hotel',
             'rooms',
             'allDays',
@@ -78,7 +68,7 @@ class FreeRoomsController extends Controller
             $freeRoomsByWeeks
         ] = $this->getFreeRoomsData($rooms);
 
-        return view('hotel-rooms._free-rooms', compact([
+        return view('rooms.free-rooms.public.index', compact([
             'hotel',
             'uuid',
             'rooms',
@@ -110,9 +100,7 @@ class FreeRoomsController extends Controller
     {
         $freeRoomsByWeeks = [];
 
-        $firstDay = Carbon::now()->startOfDay();
-        $lastDay = Carbon::now()->addWeeks(2)->endOfWeek();
-        $allDays = DateGetter::getDates($firstDay, $lastDay);
+        $allDays = $this->allDays();
         $weekNumbers = weekNumbers($allDays);
 
         if (count($rooms)) {
@@ -175,5 +163,28 @@ class FreeRoomsController extends Controller
         ]);
 
         flash('FreeRooms have been successfully updated.', 'success');
+    }
+
+    /**
+     * @return array
+     */
+    public function allDays()
+    {
+        $firstDay = Carbon::now()->startOfDay();
+        $lastDay = Carbon::now()->addWeeks(2)->endOfWeek();
+
+        $allDays = DateGetter::getDates($firstDay, $lastDay);
+
+        if (request()->wantsJson()) {
+            foreach (call_user_func_array('array_merge', $allDays) as $day) {
+                $formattedDates[] = Carbon::parse($day)->format('d M, D');
+            }
+
+            return response()->json([
+                'data' => $formattedDates,
+            ]);
+        }
+
+        return $allDays;
     }
 }

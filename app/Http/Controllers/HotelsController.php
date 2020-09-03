@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Hotel;
 use App\Http\Requests\HotelFiltersRequest;
-use App\Room;
 use App\HotelType;
 use App\Http\Requests\HotelRequest;
 use Carbon\Carbon;
@@ -121,29 +120,6 @@ class HotelsController extends Controller
     }
 
     /**
-     * @param Hotel $hotel
-     * @return Factory|View
-     */
-    public function rooms(Hotel $hotel)
-    {
-        $rooms = Room::where('hotel_id', $hotel->id)->paginate(20);
-
-        if (request()->search_query) {
-            $searchQuery = escape_like(request()->search_query);
-
-            $rooms = Room::where('name', 'like', '%' . $searchQuery . '%')
-                ->where('hotel_id', $hotel->id)
-                ->orderByDesc('created_at')
-                ->paginate(10);
-        }
-
-        return view('hotels.rooms', compact([
-            'rooms',
-            'hotel',
-        ]));
-    }
-
-    /**
      * @param HotelFiltersRequest $request
      * @return JsonResponse
      */
@@ -163,7 +139,7 @@ class HotelsController extends Controller
                 ->get();
 
             return response()->json([
-                'hotels' => $hotels,
+                'content' => view('hotels.filtered-hotels.index', compact('hotels'))->render(),
             ]);
         }
     }

@@ -8,21 +8,32 @@
 
 @section('content')
     <div class="row">
-        <div class="col-md-12">
-            <form method="POST" action="{{ route('public_free_rooms.update', $uuid) }}" class="form-free-rooms">
+        <div class="flex-container">
+            <form method="POST" action="{{ route('free_rooms.update', $hotel) }}" class="form-free-rooms h-100">
                 @csrf
                 @method('PUT')
                 @forelse($rooms as $index => $room)
-                    <div class="card col-md-4 float-left">
+                    <div class="card float-left ml-3">
                         <div class="card-header">
                             <div class="room-name">
                                 <span>{{$room->name}}</span>
                             </div>
-                            <div class="adults-count float-left mr-1">
-                                <span class="badge badge-secondary">{{$room->adults}} Adults</span>
+                            <div class="badges d-flex">
+                                <div class="adults-count mr-1">
+                                    <span class="badge badge-secondary">{{$room->adults}} Adults</span>
+                                </div>
+                                <div class="children-count">
+                                    <span class="badge badge-secondary">{{$room->children}} Children</span>
+                                </div>
                             </div>
-                            <div class="children-count float-left">
-                                <span class="badge badge-secondary">{{$room->children}} Children</span>
+                            <div class="for-all mt-2 d-flex">
+                                <input type="number"
+                                       class="form-control w-50"
+                                       value=0
+                                >
+                                <button type="button" class="btn-success w-50">
+                                    SET FOR ALL
+                                </button>
                             </div>
                         </div>
                         <div class="card-body">
@@ -36,7 +47,6 @@
                                             </td>
                                             <td>
                                                 <input type="number"
-                                                       id="free-room"
                                                        class="form-control free-rooms {{ $errors->has("free_rooms.$room->id.$day") ? 'is-invalid' : '' }}"
                                                        name="free_rooms[{{ $room->id }}][{{ $day }}]"
                                                        required
@@ -75,7 +85,6 @@
                                             </td>
                                             <td>
                                                 <input type="number"
-                                                       id="free-room"
                                                        class="form-control free-rooms {{ $errors->has("free_rooms.$room->id.$day") ? 'is-invalid' : '' }}"
                                                        name="free_rooms[{{ $room->id }}][{{ $day }}]"
                                                        min="0"
@@ -113,7 +122,6 @@
                                             </td>
                                             <td>
                                                 <input type="number"
-                                                       id="free-room"
                                                        class="form-control free-rooms {{ $errors->has("free_rooms.$room->id.$day") ? 'is-invalid' : '' }}"
                                                        name="free_rooms[{{ $room->id }}][{{ $day }}]"
                                                        min="0"
@@ -149,7 +157,7 @@
                     <p class="text-center">No Free Rooms</p>
                 @endforelse
                 @if(count($rooms))
-                    <div class="save-data">
+                    <div class="d-flex w-100 ml-2">
                         <button type="submit" class="btn btn-primary btn-round">
                             Save
                         </button>

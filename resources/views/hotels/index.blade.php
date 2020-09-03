@@ -21,33 +21,30 @@
                         <table class="table">
                             <thead class="text-primary">
                             <tr>
-                                <th>N</th>
+                                <th>ID</th>
                                 <th>Name</th>
                                 <th>Type</th>
-                                <th>Rooms</th>
                                 <th>Free Rooms Updated At</th>
                                 <th>Created On</th>
                                 <th>Actions</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @forelse($hotels as $index => $hotel)
+                            @forelse($hotels as $hotel)
                                 <tr>
-                                    <td>{{ $index + 1 }}</td>
+                                    <td>{{ $hotel->id }}</td>
                                     <td>{{ $hotel->name }}</td>
                                     <td>{{ $hotel->type ? $hotel->type->type : '-' }}</td>
-                                    <td>
-                                        <a title="Rooms"
-                                           style="color:#000000"
-                                           href="{{ route('hotel.rooms', $hotel) }}">
-                                            Rooms
-                                        </a>
-                                    </td>
                                     <td>
                                         {{ $hotel->rooms_updated_at }}
                                     </td>
                                     <td>{{ $hotel->created_at->toDateString() }}</td>
                                     <td class="d-flex">
+                                        <a class="btn btn-round btn-success btn-icon btn-sm mr-1"
+                                           title="Rooms"
+                                           href="{{ route('rooms', $hotel) }}">
+                                            <i class="fas fa-bed"></i>
+                                        </a>
                                         <a class="btn btn-round btn-primary btn-icon btn-sm mr-1"
                                            title="Free Rooms"
                                            href="{{ route('free_rooms', $hotel) }}">
@@ -88,7 +85,3 @@
         </div>
     </div>
 @endsection
-
-{{--@push('scripts')--}}
-{{--    <script src="{{ asset('js/modules/hotels.js') }}"></script>--}}
-{{--@endpush--}}

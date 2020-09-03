@@ -23,18 +23,14 @@ Route::group(['middleware' => 'auth'], function () {
     Route::delete('/hotels/{hotel}', 'HotelsController@destroy')->name('hotels.delete');
 
     //-----Topics-----------------------------------------------------------------------------------------------------//
-    //Route::get('/hotel-types', 'HotelTypesController@index')->name('hotel_types');
     Route::put('/hotel-types', 'HotelTypesController@sync')->name('hotel_types.sync');
 
     //-----Rooms-----------------------------------------------------------------------------------------------------//
-    Route::get('/hotels/{hotel}/rooms', 'HotelsController@rooms')->name('hotel.rooms');
-    Route::get('/hotels/{hotel}/rooms/create', 'RoomsController@create')->name('hotel_rooms.create');
-    Route::post('/hotels/{hotel}/rooms', 'RoomsController@store')->name('hotel_rooms.store');
-    Route::get('/hotels/{hotel}/rooms/{room}/edit', 'RoomsController@edit')->name('hotel_rooms.edit');
-    Route::put('/hotels/{hotel}/rooms/{room}', 'RoomsController@update')->name('hotel_rooms.update');
-    Route::delete('/hotels/{hotel}/rooms/{room}', 'RoomsController@destroy')->name('hotel_rooms.delete');
+    Route::get('/hotels/{hotel}/rooms', 'RoomsController@index')->name('rooms');
+    Route::put('/hotels/{hotel}/rooms', 'RoomsController@sync')->name('rooms.sync');
 
-    //Route::get('/hotels/{hotel}/free-rooms', 'FreeRoomsController@index')->name('free_rooms');
+    //-----Free Rooms-----------------------------------------------------------------------------------------------------//
+    Route::get('/hotels/{hotel}/free-rooms', 'FreeRoomsController@index')->name('free_rooms');
     Route::put('/hotels/{hotel}/free-rooms', 'FreeRoomsController@update')->name('free_rooms.update');
 });
 
@@ -42,7 +38,7 @@ Route::group(['middleware' => 'auth'], function () {
 Route::get('/hotels/{uuid}/public-free-rooms', 'FreeRoomsController@publicFreeRooms')->name('public_free_rooms');
 Route::put('/hotels/{uuid}/public-free-rooms', 'FreeRoomsController@publicFreeRoomsUpdate')->name('public_free_rooms.update');
 
-Route::get('/hotels/{hotel}/free-rooms', 'FreeRoomsController@index')->name('free_rooms');
+Route::get('/all-days', 'FreeRoomsController@allDays');
 Route::get('/hotel-types', 'HotelTypesController@index')->name('hotel_types');
 Route::get('/filtered-hotels', 'HotelsController@getFilteredHotels');
 

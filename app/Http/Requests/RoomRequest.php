@@ -28,6 +28,5 @@ class RoomRequest extends FormRequest
             'rooms.*.adults' => 'required|numeric|min:0|max:5',
             'rooms.*.children' => 'required|numeric|min:0|max:5',
         ];
-
     }
 }

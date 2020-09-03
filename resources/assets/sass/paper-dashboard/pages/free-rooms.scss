@@ -20,7 +20,7 @@ input[type=number]::-webkit-outer-spin-button {
     margin: 0;
 }
 
-#free-room {
+.free-rooms {
     width: 50px;
     text-align: center;
     border-right: 1px solid $borderGray;
@@ -31,11 +31,11 @@ input[type=number]::-webkit-outer-spin-button {
     }
 }
 
-#free-room.is-invalid {
+.free-rooms.is-invalid {
     border-right: 1px solid $borderRed;
 }
 
-.decrement, .increment {
+.decrement, .increment, .btn-success {
     margin-left: 10px;
     border: solid 1px !important;
 }
@@ -44,15 +44,6 @@ input[type=number]::-webkit-outer-spin-button {
     padding: 10px 15px;
 }
 
-.save-data {
-
-    button {
-        position: absolute;
-        top: 96%;
-        left: 20px;
-    }
-}
-
-.form-free-rooms .card{
-    margin-bottom: 50px;
+.form-free-rooms .card {
+    margin-bottom: 30px;
 }

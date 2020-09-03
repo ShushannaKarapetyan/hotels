@@ -15,7 +15,11 @@ return [
     |
     */
 
-    'paths' => ['api/*'],
+    'paths' => ['api/*',
+        'hotel-types',
+        'all-days',
+        'filtered-hotels',
+    ],
 
     'allowed_methods' => ['*'],
 
@@ -30,5 +34,4 @@ return [
     'max_age' => 0,
 
     'supports_credentials' => false,
-
 ];

@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Carbon\Carbon;
 
 class HotelTypesController extends Controller
 {
@@ -45,9 +46,13 @@ class HotelTypesController extends Controller
      */
     public function sync(HotelTypesSyncRequest $request)
     {
+        $hotelTypesData = [];
+        $now = Carbon::now();
+
         $requestHotelTypeIds = array_keys($request->hotel_types);
         $hotelTypesToDelete = HotelType::whereNotIn('id', $requestHotelTypeIds)->pluck('id');
         $existingHotelTypes = HotelType::whereIn('id', $requestHotelTypeIds)->get();
+
         $newHotelTypes = array_filter($request->hotel_types, function ($index) {
             return strpos($index, 'temp_') === 0;
         }, ARRAY_FILTER_USE_KEY);
@@ -60,8 +65,14 @@ class HotelTypesController extends Controller
         }
 
         foreach ($newHotelTypes as $hotelType) {
-            HotelType::create(['type' => $hotelType]);
+            $hotelTypesData[] = [
+                'type' => $hotelType,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
         }
+
+        HotelType::insert($hotelTypesData);
 
         HotelType::whereIn('id', $hotelTypesToDelete)->delete();
 

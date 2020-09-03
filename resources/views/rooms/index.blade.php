@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@push('title', 'Create Room')
+@push('title', 'Rooms')
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/_room-fields.css') }}">
@@ -10,16 +10,23 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <form method="POST" action="{{ route('hotel_rooms.store', $hotel) }}">
+                <div class="card-header">
+                    @include('partials.search-form', [
+                        'actionUrl' => route('rooms', $hotel),
+                        'placeholder' => 'Enter Room Name'
+                    ])
+                </div>
+                <form method="POST" action="{{ route('rooms.sync', $hotel) }}">
                     @csrf
+                    @method('PUT')
                     <div class="card-body">
                         <div id="hotel-room-list" class="row">
                             @php
-                                $hotelRooms = !empty(old('rooms')) ? old('rooms') : '';
+                                $roomsWithIdKeys = !empty(old('rooms')) ? old('rooms') : $roomsWithIdKeys;
                             @endphp
-                            @if($hotelRooms)
-                                @foreach($hotelRooms as $hotelRoomId => $hotelRoomName)
-                                    @include('hotel-rooms._fields')
+                            @if($roomsWithIdKeys)
+                                @foreach($roomsWithIdKeys as $id => $room)
+                                    @include('rooms._room-item')
                                 @endforeach
                             @endif
                         </div>
@@ -34,7 +41,7 @@
                 </form>
             </div>
             <div id="hotel-room-item-wrapper" class="d-none">
-                @include('hotel-rooms._fields', ['hotelRoomId' => null, 'hotelRoomName' => null])
+                @include('rooms._room-item', ['id' => null, 'room' => null])
             </div>
         </div>
     </div>

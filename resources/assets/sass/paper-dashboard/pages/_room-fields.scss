@@ -7,10 +7,10 @@ input[type=number]::-webkit-outer-spin-button {
     margin: 0;
 }
 
-#adult, #child {
+.people {
     width: 50px;
     text-align: center;
-    border-right: 1px solid $borderGray;
+    border-right: 1px solid $borderGray !important;
     height: 30px !important;
 
     &:focus {
@@ -18,8 +18,8 @@ input[type=number]::-webkit-outer-spin-button {
     }
 }
 
-#adult.is-invalid, #child.is-invalid {
-    border-right: 1px solid $borderRed;
+.people.is-invalid {
+    border-right: 1px solid $borderRed !important;
 }
 
 .adults, .children {

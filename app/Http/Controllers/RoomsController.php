@@ -8,6 +8,7 @@ use App\Http\Requests\RoomRequest;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Carbon\Carbon;
 
 class RoomsController extends Controller
 {
@@ -15,81 +16,78 @@ class RoomsController extends Controller
      * @param Hotel $hotel
      * @return Factory|View
      */
-    public function create(Hotel $hotel)
+    public function index(Hotel $hotel)
     {
-        return view('hotel-rooms.create', compact('hotel'));
+        $rooms = Room::where('hotel_id', $hotel->id);
+
+        if (request()->search_query) {
+            $searchQuery = escape_like(request()->search_query);
+
+            $rooms->where('name', 'LIKE', '%' . $searchQuery . '%')
+                ->orderByDesc('created_at')->get();
+        }
+
+        $rooms = $rooms->get();
+
+        foreach ($rooms as $room) {
+            $roomsWithIdKeys[$room->id] = $room;
+        }
+
+        return view('rooms.index', [
+            'roomsWithIdKeys' => $roomsWithIdKeys,
+            'hotel' => $hotel,
+            'searchQuery' => @$searchQuery,
+        ]);
     }
 
     /**
      * @param RoomRequest $request
      * @param Hotel $hotel
-     * @return RedirectResponse
+     * @return mixed
      */
-    public function store(RoomRequest $request, Hotel $hotel)
+    public function sync(RoomRequest $request, Hotel $hotel)
     {
-        foreach ($request->rooms as $index => $room) {
-            Room::create([
+        $roomsData = [];
+        $now = Carbon::now();
+
+        $requestRoomIds = array_keys($request->rooms);
+
+        $roomsToDelete = Room::whereNotIn('id', $requestRoomIds)
+            ->where('hotel_id', $hotel->id)
+            ->pluck('id');
+
+        $existingRooms = Room::whereIn('id', $requestRoomIds)
+            ->where('hotel_id', $hotel->id)
+            ->get();
+
+        $newRooms = array_filter($request->rooms, function ($index) {
+            return strpos($index, 'temp_') === 0;
+        }, ARRAY_FILTER_USE_KEY);
+
+        foreach ($existingRooms as $room) {
+            if ($room->name !== $request->rooms[$room->id]['name']) {
+                $room->name = $request->rooms[$room->id]['name'];
+                $room->save();
+            }
+        }
+
+        foreach ($newRooms as $room) {
+            $roomsData[] = [
                 'hotel_id' => $hotel->id,
                 'name' => $room['name'],
                 'adults' => $room['adults'],
                 'children' => $room['children'],
-            ]);
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
         }
 
-        flash('Rooms have been successfully created.', 'success');
+        Room::insert($roomsData);
 
-        return redirect()->route('hotel.rooms', $hotel);
-    }
+        Room::whereIn('id', $roomsToDelete)->delete();
 
-    /**
-     * @param Hotel $hotel
-     * @param Room $room
-     * @return Factory|View
-     */
-    public function edit(Hotel $hotel, Room $room)
-    {
-        return view('hotel-rooms.edit', compact([
-            'hotel',
-            'room',
-        ]));
-    }
+        flash('Rooms have been successfully updated.', 'success');
 
-    /**
-     * @param RoomRequest $request
-     * @param Hotel $hotel
-     * @param Room $room
-     * @return RedirectResponse
-     */
-    public function update(RoomRequest $request, Hotel $hotel, Room $room)
-    {
-        $requestData = array_values($request->rooms)[0];
-
-        $roomData = [
-            'hotel_id' => $hotel->id,
-            'name' => $requestData['name'],
-            'adults' => $requestData['adults'],
-            'children' => $requestData['children'],
-        ];
-
-        $room->update($roomData);
-
-        flash('Room has been successfully updated.', 'success');
-
-        return redirect()->route('hotel.rooms', $hotel);
-    }
-
-    /**
-     * @param Hotel $hotel
-     * @param Room $room
-     * @return RedirectResponse
-     * @throws \Exception
-     */
-    public function destroy(Hotel $hotel, Room $room)
-    {
-        $room->delete();
-
-        flash('Room has been successfully deleted.', 'success');
-
-        return back();
+        return redirect()->route('rooms', $hotel);
     }
 }
