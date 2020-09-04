@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Hotels')
+@push('title', 'Hotels')
 
 @section('content')
     <div class="row">
@@ -11,10 +11,18 @@
                         'actionUrl' => route('hotels'),
                         'placeholder' => 'Enter Hotel Name'
                     ])
-                    <a class="btn btn-round btn-success"
-                       href="{{ route('hotels.create') }}">
-                        Create new Hotel
-                    </a>
+                    <div class="float-left">
+                        <a class="btn btn-round btn-success"
+                           href="{{ route('hotels.create') }}">
+                            Create new Hotel
+                        </a>
+                    </div>
+                    <div class="float-right">
+                        <a class="btn btn-primary btn-round" href="{{route('invoice')}}" target="_blank">
+                            Export to PDF
+                            <i class="far fa-file-pdf"></i>
+                        </a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

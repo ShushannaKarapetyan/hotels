@@ -6,7 +6,6 @@ use App\Hotel;
 use App\Room;
 use App\Http\Requests\RoomRequest;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Carbon\Carbon;
 
@@ -34,7 +33,7 @@ class RoomsController extends Controller
         }
 
         return view('rooms.index', [
-            'roomsWithIdKeys' => $roomsWithIdKeys,
+            'roomsWithIdKeys' => @$roomsWithIdKeys,
             'hotel' => $hotel,
             'searchQuery' => @$searchQuery,
         ]);
@@ -67,6 +66,16 @@ class RoomsController extends Controller
         foreach ($existingRooms as $room) {
             if ($room->name !== $request->rooms[$room->id]['name']) {
                 $room->name = $request->rooms[$room->id]['name'];
+                $room->save();
+            }
+
+            if ($room->adults !== $request->rooms[$room->id]['adults']) {
+                $room->adults = $request->rooms[$room->id]['adults'];
+                $room->save();
+            }
+
+            if ($room->children !== $request->rooms[$room->id]['children']) {
+                $room->children = $request->rooms[$room->id]['children'];
                 $room->save();
             }
         }

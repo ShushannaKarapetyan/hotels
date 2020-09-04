@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\FreeRoom;
 use App\Hotel;
 use App\Http\Requests\HotelFiltersRequest;
 use App\HotelType;
@@ -14,6 +15,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Database\Eloquent\Builder;
+use PDF;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Throwable;
 
 class HotelsController extends Controller
 {
@@ -122,6 +126,7 @@ class HotelsController extends Controller
     /**
      * @param HotelFiltersRequest $request
      * @return JsonResponse
+     * @throws Throwable
      */
     public function getFilteredHotels(HotelFiltersRequest $request)
     {
@@ -142,5 +147,40 @@ class HotelsController extends Controller
                 'content' => view('hotels.filtered-hotels.index', compact('hotels'))->render(),
             ]);
         }
+    }
+
+    /**
+     * @return BinaryFileResponse
+     */
+    public function generateInvoice()
+    {
+        $hotels = Hotel::with('rooms')->get();
+
+        $filePath = storage_path('app/invoices/invoice_' . time() . '.pdf');
+
+        foreach (call_user_func_array('array_merge', FreeRoomsController::allDays()) as $day) {
+            $dates[] = Carbon::parse($day)->format('d.m.Y');
+        }
+
+        $freeRooms = FreeRoom::where('date', '>=', Carbon::now()->format('Y-m-d'))
+            ->get()->groupBy('room_id');
+
+        foreach ($freeRooms as $roomId => $freeRoom) {
+            foreach ($freeRoom as $room) {
+                $freeRoomsByRooms[$roomId][] = $room->free;
+            }
+        }
+
+        PDF::loadView('hotels.invoice.invoice', compact([
+            'hotels',
+            'dates',
+            'freeRoomsByRooms',
+        ]))
+            ->save($filePath);
+
+        return response()->file($filePath, [
+                'Content-Disposition' => 'inline; filename="invoice_' . time() . '"',
+            ]
+        );
     }
 }

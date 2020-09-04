@@ -108,11 +108,11 @@ class FreeRoomsController extends Controller
                 $roomIds[] = $room->id;
             }
 
-            $freeRooms[] = FreeRoom::whereIn('room_id', $roomIds)
+            $freeRooms = FreeRoom::whereIn('room_id', $roomIds)
                 ->where('date', '>=', Carbon::now()->format('Y-m-d'))
                 ->get();
 
-            $freeRoomsByRooms = $freeRooms[0]->groupBy('room_id');
+            $freeRoomsByRooms = $freeRooms->groupBy('room_id');
 
             foreach ($freeRoomsByRooms as $roomId => $freeRoomsByRoom) {
                 $freeRoomsByWeeks[$roomId] = $freeRoomsByRooms[$roomId]->groupBy(function ($date) {
@@ -166,9 +166,9 @@ class FreeRoomsController extends Controller
     }
 
     /**
-     * @return array
+     * @return array|JsonResponse
      */
-    public function allDays()
+    public static function allDays()
     {
         $firstDay = Carbon::now()->startOfDay();
         $lastDay = Carbon::now()->addWeeks(2)->endOfWeek();

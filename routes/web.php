@@ -32,6 +32,8 @@ Route::group(['middleware' => 'auth'], function () {
     //-----Free Rooms-----------------------------------------------------------------------------------------------------//
     Route::get('/hotels/{hotel}/free-rooms', 'FreeRoomsController@index')->name('free_rooms');
     Route::put('/hotels/{hotel}/free-rooms', 'FreeRoomsController@update')->name('free_rooms.update');
+
+    Route::get('/invoice', 'HotelsController@generateInvoice')->name('invoice');
 });
 
 //-----Public-----------------------------------------------------------------------------------------------------//
@@ -41,4 +43,3 @@ Route::put('/hotels/{uuid}/public-free-rooms', 'FreeRoomsController@publicFreeRo
 Route::get('/all-days', 'FreeRoomsController@allDays');
 Route::get('/hotel-types', 'HotelTypesController@index')->name('hotel_types');
 Route::get('/filtered-hotels', 'HotelsController@getFilteredHotels');
-
